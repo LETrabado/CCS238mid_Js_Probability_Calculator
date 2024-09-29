@@ -1,4 +1,3 @@
-console.log("Hello World! I Don't Give a Bug");
 document.addEventListener("DOMContentLoaded", function () {
   // Function to calculate the sum of dice results
 
@@ -11,12 +10,12 @@ document.addEventListener("DOMContentLoaded", function () {
     totalResults = rollDice(dn, ds, [], []);
     posResult = sumRes(totalResults, sum);
     resProb = probability(posResult, totalResults.length);
-    console.log(dn);
-    console.log(ds);
-    console.log(sum);
-    console.log(posResult);
+    // console.log(dn);
+    // console.log(ds);
+    // console.log(sum);
+    // console.log(posResult);
     document.getElementById("sumAnswer").textContent =
-      "Probability of getting the total: " + resProb;
+      "Probability of getting the total: " + resProb + " %";
   });
 
   document.getElementById("indivButton").addEventListener("click", () => {
@@ -32,13 +31,13 @@ document.addEventListener("DOMContentLoaded", function () {
     totalResults = rollDice(dn, ds, [], []);
     posResults = indivRes(values, totalResults);
     resProb = probability(posResults, totalResults.length);
-    console.log(values);
-    console.log(values.length);
-    console.log(dn);
-    console.log(ds);
-    console.log(resProb);
+    // console.log(values);
+    // console.log(values.length);
+    // console.log(dn);
+    // console.log(ds);
+    // console.log(resProb);
     document.getElementById("indivAnswer").textContent =
-      "Probability for getting specific combination: " + resProb;
+      "Probability for getting specific combination: " + resProb + " %";
   });
 });
 
@@ -83,11 +82,11 @@ function sumRes(results, target) {
       validCombinations.push(result);
     }
   }
-
-  console.log(`Combinations that total the target ${target}:`);
-  for (let result of validCombinations) {
-    console.log(result);
-  }
+  // Printing Results
+  // console.log(`Combinations that total the target ${target}:`);
+  // for (let result of validCombinations) {
+  //   console.log(result);
+  // }
 
   return validCombinations.length;
 }
@@ -123,13 +122,13 @@ function indivRes(desRes, allRes) {
       validResults.push(result);
     }
   }
-
-  console.log(
-    `Combinations that contain the subset ${JSON.stringify(desRes)}:`
-  );
-  for (let result of validResults) {
-    console.log(result);
-  }
+  // Printing Results
+  // console.log(
+  //   `Combinations that contain the subset ${JSON.stringify(desRes)}:`
+  // );
+  // for (let result of validResults) {
+  //   console.log(result);
+  // }
 
   return validResults.length;
 }
