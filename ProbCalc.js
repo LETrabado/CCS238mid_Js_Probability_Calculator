@@ -7,14 +7,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const dice = document.getElementById("numDice").value;
     const sides = document.getElementById("numSides").value;
     const sum = document.getElementById("sum").value;
-    start();
-    result = formatNumber(sumProbability(dice, sides, sum));
-    document.getElementById("sumAnswer").textContent =
-      "Probability of getting the total: " + result + " %";
+    //input validity check
+    if (dice < 1 || dice > 5 || sides < 1 || sides > 120) {
+      document.getElementById("warning").style.display = "block";
+    } else {
+      document.getElementById("warning").style.display = "none";
+      //probability computation
+      console.log("Dice: " + dice + ", Sides: " + sides);
+      start();
+      result = formatNumber(sumProbability(dice, sides, sum));
+      document.getElementById("sumAnswer").textContent =
+        "Probability of getting the total: " + result + " %";
 
-    logElapsedTime();
-    stop();
-    reset();
+      logElapsedTime();
+      stop();
+      reset();
+    }
   });
 
   document.getElementById("indivButton").addEventListener("click", () => {
@@ -26,10 +34,21 @@ document.addEventListener("DOMContentLoaded", function () {
     inputs.forEach((input) => {
       if (input.value) values.push(input.value);
     });
-
-    result = formatNumber(indivProbability(dice, sides, values));
-    document.getElementById("indivAnswer").textContent =
-      "Probability for getting specific combination: " + result + " %";
+    //input validity check
+    if (dice < 1 || dice > 5 || sides < 1 || sides > 120) {
+      document.getElementById("warning").style.display = "block";
+    } else {
+      document.getElementById("warning").style.display = "none";
+      //probability computation
+      console.log("Dice: " + dice + ", Sides: " + sides);
+      start();
+      result = formatNumber(indivProbability(dice, sides, values));
+      document.getElementById("indivAnswer").textContent =
+        "Probability for getting specific combination: " + result + " %";
+      logElapsedTime();
+      stop();
+      reset();
+    }
   });
 });
 
@@ -43,15 +62,16 @@ function calculateSum() {
   }
 }
 
-// Function to calculate the dice combinations
+//input: number of desired result, number of all possible result
+//output: probability
 function probability(desResult, posResult) {
   let result = (desResult / posResult) * 100;
   return result;
 }
 
-//SUM PROBABILITY CALCULATOR
+//input: dice number, sides number, sum
+//output: probability
 function sumProbability(dn, ds, sum) {
-  // Helper function to calculate all possible combinations recursively
   function countCombinations(dn, sum, sides) {
     if (dn === 0) {
       return sum === 0 ? 1 : 0;
@@ -62,44 +82,32 @@ function sumProbability(dn, ds, sum) {
     }
     return count;
   }
-
-  // Calculate the number of possible rolls resulting in the sum
   let desres = countCombinations(dn, sum, ds);
 
-  // Calculate the number of all possible rolls
+  // GET total possible rolls
   let totalPossibleRolls = Math.pow(ds, dn);
-
-  // Call the provided probability function
   return probability(desres, totalPossibleRolls);
 }
 
-//COMBINATION PROBABILITY CALCULATOR
+//input: dice number, sides number, combination array
+//output: probability
 function indivProbability(dn, ds, subset) {
   let count = 0;
-
-  // Helper function to roll the dice and check the subset
   function rollDice(dn, result) {
-    // Base case: If we have rolled all the dice, check the result
     if (dn === 0) {
       if (containsSubset(result, subset)) {
         count++;
       }
       return;
     }
-
-    // Try all sides of the dice for the current roll
     for (let i = 1; i <= ds; i++) {
       rollDice(dn - 1, [...result, i]);
     }
   }
 
-  // Total possible rolls
+  // GET Total possible rolls
   let totalCount = Math.pow(ds, dn);
-
-  // Start rolling the dice
   rollDice(dn, []);
-
-  // Calculate and return the probability
   return probability(count, totalCount);
 }
 
@@ -151,7 +159,9 @@ function logElapsedTime() {
     .padStart(2, "0");
   const milliseconds = (time % 1000).toString().padStart(3, "0"); // Get milliseconds and pad to 3 digits
 
-  console.log(`Elapsed time: ${hours}:${minutes}:${seconds}.${milliseconds}`);
+  console.log(
+    `calculation completed in: ${hours}:${minutes}:${seconds}.${milliseconds}`
+  );
 }
 
 // Start the stopwatch
@@ -159,7 +169,7 @@ function start() {
   if (!intervalId) {
     startTime = Date.now();
     intervalId = setInterval(logElapsedTime, 1000); // Log elapsed time every second
-    console.log("Stopwatch started");
+    console.log("Calculating...");
   }
 }
 
@@ -169,7 +179,6 @@ function stop() {
     clearInterval(intervalId);
     elapsedTime += Date.now() - startTime;
     intervalId = null;
-    console.log("Stopwatch stopped");
   }
 }
 
